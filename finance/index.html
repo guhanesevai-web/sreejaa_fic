@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Sreejaa Finance | Secure Suite with Excel Export</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, 'Segoe UI', 'Inter', 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #e9f0f9 0%, #d4e0f0 100%);
+            min-height: 100vh;
+            padding: 1.5rem;
+        }
+
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(2px);
+            border-radius: 2rem;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.2);
+            padding: 1.8rem;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255,255,255,0.6);
+        }
+
+        .login-panel, .dashboard-panel {
+            margin-bottom: 2rem;
+        }
+
+        .role-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .role-btn {
+            padding: 0.75rem 2rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            background: #f1f5f9;
+            transition: 0.2s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .role-btn.active {
+            background: #8b2c2d;
+            color: white;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+        }
+
+        .login-form {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 1.5rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 0.4rem;
+            color: #0f172a;
+        }
+
+        .password-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .password-wrapper input {
+            width: 100%;
+            padding: 0.8rem;
+            padding-right: 3rem;
+            border-radius: 1rem;
+            border: 1px solid #cbd5e1;
+            font-size: 1rem;
+            background: #fff;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0;
+            color: #64748b;
+        }
+
+        .toggle-password:hover {
+            background: none;
+            transform: scale(1);
+            color: #8b2c2d;
+        }
+
+        button {
+            background: #8b2c2d;
+            color: white;
+            border: none;
+            padding: 0.7rem 1.3rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #a03e3f;
+            transform: scale(0.97);
+        }
+
+        .error-msg {
+            color: #b91c1c;
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 1rem;
+        }
+
+        .company-brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .logo-preview {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 50%;
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+        }
+
+        .company-info h3 {
+            font-size: 1.4rem;
+            color: #8b2c2d;
+        }
+
+        .view-tabs {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .view-tab {
+            background: #e2e8f0;
+            padding: 0.5rem 1.5rem;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .view-tab.active-tab {
+            background: #8b2c2d;
+            color: white;
+        }
+
+        .logout-btn {
+            background: #475569;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.2rem;
+            margin: 1.5rem 0;
+        }
+
+        .option-card {
+            flex: 1;
+            min-width: 200px;
+            background: #f8fafc;
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            text-align: center;
+            cursor: pointer;
+            border: 1px solid #cbd5e1;
+            transition: all 0.2s;
+        }
+
+        .option-card:hover {
+            background: #fee2e2;
+            border-color: #8b2c2d;
+        }
+
+        .data-section {
+            margin-top: 1.8rem;
+            border-top: 2px dashed #94a3b8;
+            padding-top: 1.2rem;
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 1.2rem;
+            background: #f1f5f9;
+            padding: 0.8rem;
+            border-radius: 1rem;
+        }
+
+        .filter-bar input, .filter-bar select {
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.8rem;
+            border: 1px solid #cbd5e1;
+        }
+
+        .export-btn {
+            background: #2e7d32;
+            margin-left: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        th, td {
+            padding: 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: #2d3e50;
+            color: white;
+        }
+
+        .action-btn {
+            background: #2c3e66;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.75rem;
+            margin: 0 0.2rem;
+        }
+
+        .finance-summary {
+            background: #fef3e8;
+            padding: 1rem;
+            border-radius: 1.2rem;
+            margin: 1rem 0;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 0.8rem 1.2rem;
+            border-radius: 1rem;
+            font-weight: bold;
+        }
+
+        .edit-profile-btn {
+            background: #2c5282;
+            margin-left: 1rem;
+        }
+
+        @media (max-width: 700px) {
+            body { padding: 0.8rem; }
+            th, td { font-size: 0.75rem; padding: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="app-container" id="appRoot"></div>
+
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+<script>
+    // ----------------------------- COMPANY PROFILE -------------------------
+    let companyProfile = {
+        name: "Sreejaa Finance",
+        address: "Mahalakshmi Nagar, 100 Feet Road, Chennai - 600078",
+        phone1: "9965970414",
+        phone2: "7539977850",
+        logo: null
+    };
+
+    // ----------------------------- MOCK DATA -------------------------
+    let financeData = {
+        customers: [
+            { id: "C001", name: "Ramesh Kumar", phone: "9876543210", address: "Anna Nagar", 
+              loans: [ { loanId: "L101", principal: 50000, interestRate: 12, issuedDate: "2025-01-10", status: "active", weeklyDue: 1200, monthlyDue: 4800, totalPaidInterest: 0, totalPaidPrincipal: 0, paymentHistory: [] } ] },
+            { id: "C002", name: "Meena Devi", phone: "9988776655", address: "KK Nagar", 
+              loans: [ { loanId: "L102", principal: 25000, interestRate: 10, issuedDate: "2025-02-05", status: "active", weeklyDue: 600, monthlyDue: 2400, totalPaidInterest: 0, totalPaidPrincipal: 0, paymentHistory: [] } ] }
+        ]
+    };
+
+    // Load from localStorage
+    function loadAllData() {
+        const savedProfile = localStorage.getItem("sreejaa_company_profile");
+        if(savedProfile) { try { const parsed = JSON.parse(savedProfile); if(parsed) companyProfile = parsed; } catch(e) {} }
+        const savedData = localStorage.getItem("finpro_db");
+        if(savedData) { try { const parsedData = JSON.parse(savedData); if(parsedData && parsedData.customers) financeData = parsedData; } catch(e) {} }
+    }
+
+    function persistCompanyProfile() { localStorage.setItem("sreejaa_company_profile", JSON.stringify(companyProfile)); }
+    function persistData() { localStorage.setItem("finpro_db", JSON.stringify(financeData)); }
+    loadAllData();
+
+    // Helper: get all collections with proper dates
+    function getAllCollections() {
+        let records = [];
+        financeData.customers.forEach(cust => {
+            cust.loans.forEach(loan => {
+                if (loan.paymentHistory && loan.paymentHistory.length) {
+                    loan.paymentHistory.forEach(pay => {
+                        records.push({
+                            customerName: cust.name,
+                            customerId: cust.id,
+                            loanId: loan.loanId,
+                            date: pay.date,
+                            type: pay.type === 'interest' ? 'Interest Payment' : 'Due Collection',
+                            amount: pay.amount,
+                            weekRef: pay.weekRef,
+                            monthRef: pay.monthRef,
+                            note: pay.note || ''
+                        });
+                    });
+                }
+            });
+        });
+        records.sort((a,b) => new Date(b.date) - new Date(a.date));
+        return records;
+    }
+
+    // Interest-only payment
+    function addInterestPayment(custId, loanId, amount, periodType, periodKey) {
+        const customer = financeData.customers.find(c => c.id === custId);
+        if (!customer) return false;
+        const loan = customer.loans.find(l => l.loanId === loanId);
+        if (!loan) return false;
+        loan.totalPaidInterest = (loan.totalPaidInterest || 0) + amount;
+        loan.paymentHistory = loan.paymentHistory || [];
+        loan.paymentHistory.push({
+            date: new Date().toISOString().slice(0,10),
+            type: "interest",
+            amount: amount,
+            weekRef: periodType === 'weekly' ? periodKey : null,
+            monthRef: periodType === 'monthly' ? periodKey : null,
+            note: `Interest Payment (Principal unchanged) - ${periodType}`
+        });
+        persistData();
+        return true;
+    }
+
+    // ---------- State ----------
+    let currentUser = null;
+    let currentView = "weekly";
+    let activeOption = "customers";
+    let dateFilterStart = "";
+    let dateFilterEnd = "";
+
+    function renderApp() {
+        const root = document.getElementById("appRoot");
+        if (!currentUser) {
+            root.innerHTML = renderLoginScreen();
+            attachLoginEvents();
+        } else {
+            root.innerHTML = renderDashboard();
+            attachDashboardEvents();
+        }
+    }
+
+    // LOGIN SCREEN with hidden passkey (dots) and toggle eye button
+    function renderLoginScreen() {
+        return `
+            <div class="glass-card login-panel" style="max-width:500px; margin:2rem auto;">
+                <div style="text-align:center; margin-bottom:1rem;">
+                    ${companyProfile.logo ? `<img src="${companyProfile.logo}" style="width:80px; height:80px; border-radius:50%; object-fit:cover; margin-bottom:10px;">` : `<div style="width:80px;height:80px;background:#8b2c2d;border-radius:50%;margin:0 auto 10px; display:flex;align-items:center;justify-content:center;color:white;font-size:28px;">💰</div>`}
+                    <h2 style="color:#8b2c2d;">${companyProfile.name}</h2>
+                    <small>${companyProfile.address}</small><br>
+                    <small>📞 ${companyProfile.phone1} / ${companyProfile.phone2}</small>
+                </div>
+                <div class="role-buttons" id="roleSelector">
+                    <button class="role-btn" data-role="owner">👑 Owner Login</button>
+                    <button class="role-btn" data-role="staff">👥 Staff Login</button>
+                </div>
+                <div class="login-form" id="loginFormContainer">
+                    <div class="input-group">
+                        <label>🔐 Passkey (Hidden)</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="loginPass" placeholder="Enter passkey" autocomplete="off">
+                            <button type="button" class="toggle-password" id="togglePassBtn" tabindex="-1">👁️</button>
+                        </div>
+                    </div>
+                    <button id="doLoginBtn">Login →</button>
+                    <div class="error-msg" id="loginError"></div>
+                    <div style="font-size:11px; margin-top:15px; background:#f1f5f9; padding:8px; border-radius:12px; color:#334155;">
+                        🔒 Secure login - Passkey never shown as plain text<br>
+                        Owner: •••• &nbsp;|&nbsp; Staff: ••••••••
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    function attachLoginEvents() {
+        let selectedRole = "owner";
+        const roleBtns = document.querySelectorAll("[data-role]");
+        roleBtns.forEach(btn => {
+            btn.addEventListener("click", () => {
+                roleBtns.forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+                selectedRole = btn.getAttribute("data-role");
+            });
+        });
+        const defaultBtn = document.querySelector("[data-role='owner']");
+        if(defaultBtn) defaultBtn.classList.add("active");
+        
+        // Toggle password visibility
+        const toggleBtn = document.getElementById("togglePassBtn");
+        const passInput = document.getElementById("loginPass");
+        if(toggleBtn && passInput) {
+            toggleBtn.addEventListener("click", () => {
+                const type = passInput.getAttribute("type") === "password" ? "text" : "password";
+                passInput.setAttribute("type", type);
+                toggleBtn.textContent = type === "password" ? "👁️" : "🙈";
+            });
+        }
+        
+        const loginBtn = document.getElementById("doLoginBtn");
+        if(loginBtn) {
+            loginBtn.addEventListener("click", () => {
+                const pass = document.getElementById("loginPass").value;
+                const errorDiv = document.getElementById("loginError");
+                if(selectedRole === "owner" && pass === "0577") {
+                    currentUser = "owner";
+                    renderApp();
+                } else if(selectedRole === "staff" && pass === "guhan@123") {
+                    currentUser = "staff";
+                    renderApp();
+                } else {
+                    errorDiv.innerText = "❌ Invalid credentials! Access denied.";
+                    document.getElementById("loginPass").value = "";
+                }
+            });
+        }
+        
+        // Enter key support
+        if(passInput) {
+            passInput.addEventListener("keypress", (e) => {
+                if(e.key === "Enter") loginBtn.click();
+            });
+        }
+    }
+
+    function renderCompanyProfileEditor() {
+        if(currentUser !== "owner") return "";
+        return `
+            <div style="background:#fef9e6; border-radius:1.5rem; padding:1.2rem; margin-bottom:1.5rem; border:1px solid #f3c2a2;">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
+                    <div><strong>🏢 Company Profile (Owner only)</strong></div>
+                    <button id="editCompanyBtn" class="edit-profile-btn">✏️ Edit Profile & Logo</button>
+                </div>
+                <div id="companyProfilePreview" style="margin-top:10px; display:flex; gap:15px; align-items:center;">
+                    ${companyProfile.logo ? `<img src="${companyProfile.logo}" class="logo-preview" style="width:50px;height:50px;">` : `<div style="width:50px;height:50px;background:#ddd;border-radius:50%;display:flex;align-items:center;justify-content:center;">🏦</div>`}
+                    <div><strong>${companyProfile.name}</strong><br>${companyProfile.address}<br>📞 ${companyProfile.phone1} / ${companyProfile.phone2}</div>
+                </div>
+            </div>
+        `;
+    }
+
+    function openProfileEditor() {
+        const newName = prompt("Enter Company Name:", companyProfile.name);
+        const newAddress = prompt("Enter Address:", companyProfile.address);
+        const newPhone1 = prompt("Enter Primary Phone:", companyProfile.phone1);
+        const newPhone2 = prompt("Enter Secondary Phone:", companyProfile.phone2);
+        if(newName) companyProfile.name = newName;
+        if(newAddress) companyProfile.address = newAddress;
+        if(newPhone1) companyProfile.phone1 = newPhone1;
+        if(newPhone2) companyProfile.phone2 = newPhone2;
+        
+        const fileInput = document.createElement("input");
+        fileInput.type = "file";
+        fileInput.accept = "image/*";
+        fileInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    companyProfile.logo = ev.target.result;
+                    persistCompanyProfile();
+                    renderApp();
+                };
+                reader.readAsDataURL(file);
+            } else {
+                persistCompanyProfile();
+                renderApp();
+            }
+        };
+        fileInput.click();
+        persistCompanyProfile();
+        renderApp();
+    }
+
+    // ============ EXPORT TO EXCEL ============
+    function exportToExcel(filteredRecords, title) {
+        if(filteredRecords.length === 0) {
+            alert("No data available to export!");
+            return;
+        }
+        const worksheetData = filteredRecords.map(rec => ({
+            "Customer Name": rec.customerName,
+            "Loan ID": rec.loanId,
+            "Date": rec.date,
+            "Type": rec.type,
+            "Amount (₹)": rec.amount,
+            "Period Ref": rec.weekRef || rec.monthRef || "-",
+            "Note": rec.note || ""
+        }));
+        const ws = XLSX.utils.json_to_sheet(worksheetData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, `${title}_Report`);
+        XLSX.writeFile(wb, `${companyProfile.name}_${title}_${new Date().toISOString().slice(0,19)}.xlsx`);
+    }
+
+    function filterByDateRange(records, startDate, endDate) {
+        if(!startDate && !endDate) return records;
+        return records.filter(rec => {
+            const recDate = new Date(rec.date);
+            if(startDate && new Date(startDate) > recDate) return false;
+            if(endDate) {
+                const end = new Date(endDate);
+                end.setHours(23,59,59);
+                if(end < recDate) return false;
+            }
+            return true;
+        });
+    }
+
+    // Dashboard
+    function renderDashboard() {
+        let mainContent = "";
+        if (activeOption === "customers") mainContent = renderCustomerManagement();
+        else if (activeOption === "loans") mainContent = renderLoanManagement();
+        else if (activeOption === "collection_report") mainContent = renderCollectionReport();
+        
+        return `
+            <div class="glass-card dashboard-panel">
+                <div class="dashboard-header">
+                    <div class="company-brand">
+                        ${companyProfile.logo ? `<img src="${companyProfile.logo}" class="logo-preview" style="width:55px;height:55px;">` : `<div style="width:55px;height:55px;background:#8b2c2d;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;">💰</div>`}
+                        <div class="company-info">
+                            <h3>${companyProfile.name}</h3>
+                            <small>${companyProfile.address} | 📞 ${companyProfile.phone1} / ${companyProfile.phone2}</small>
+                        </div>
+                    </div>
+                    <button class="logout-btn" id="logoutBtn">🚪 Logout</button>
+                </div>
+                ${currentUser === "owner" ? renderCompanyProfileEditor() : ""}
+                <div class="view-tabs">
+                    <div class="view-tab ${currentView === 'weekly' ? 'active-tab' : ''}" data-view="weekly">📅 Weekly Data</div>
+                    <div class="view-tab ${currentView === 'monthly' ? 'active-tab' : ''}" data-view="monthly">📆 Monthly Data</div>
+                </div>
+                <div class="options-grid">
+                    <div class="option-card" data-opt="customers">👥 Customer Management</div>
+                    <div class="option-card" data-opt="loans">💰 Loan & Interest Apply</div>
+                    <div class="option-card" data-opt="collection_report">📊 Collection Report & Excel Export</div>
+                </div>
+                <div class="data-section">
+                    <h3>📌 ${activeOption === 'customers' ? (currentView === 'weekly' ? 'Weekly Customer Overview' : 'Monthly Customer Overview') : activeOption === 'loans' ? (currentView === 'weekly' ? 'Weekly Interest Payment' : 'Monthly Interest Payment') : 'Collection Report with Date Filter'}</h3>
+                    ${mainContent}
+                </div>
+            </div>
+        `;
+    }
+    
+    function renderCustomerManagement() {
+        let html = `<div style="margin-bottom:1rem;">${currentUser === 'owner' ? '<button id="addCustomerBtn">➕ Add New Customer</button>' : ''}</div>`;
+        html += `<table><thead><tr><th>ID</th><th>Name</th><th>Phone</th><th>Active Loans</th><th>Action</th></tr></thead><tbody>`;
+        financeData.customers.forEach(cust => {
+            const activeLoansCount = cust.loans.filter(l => l.status === 'active').length;
+            html += `<tr>
+                        <td>${cust.id}</td>
+                        <td>${cust.name}</td>
+                        <td>${cust.phone}</td>
+                        <td>${activeLoansCount}</td>
+                        <td><button class="action-btn view-loans-cust" data-custid="${cust.id}">View Loans</button></td>
+                     </tr>`;
+        });
+        html += `</tbody></table><div id="loanDetailModal" style="margin-top:1rem;"></div>`;
+        setTimeout(() => {
+            document.querySelectorAll(".view-loans-cust").forEach(btn => {
+                btn.addEventListener("click", (e) => showCustomerLoanDetails(btn.getAttribute("data-custid")));
+            });
+            if(currentUser === 'owner') {
+                const addBtn = document.getElementById("addCustomerBtn");
+                if(addBtn) addBtn.onclick = () => addNewCustomer();
+            }
+        }, 10);
+        return html;
+    }
+    
+    function showCustomerLoanDetails(custId) {
+        const cust = financeData.customers.find(c => c.id === custId);
+        if(!cust) return;
+        let modalDiv = document.getElementById("loanDetailModal");
+        if(modalDiv) {
+            let loansHtml = `<div class="glass-card" style="margin-top:1rem;"><h4>Loans of ${cust.name}</h4>`;
+            cust.loans.forEach(loan => { loansHtml += `<div style="border-left:4px solid #8b2c2d; margin:0.5rem; padding:0.5rem;">Loan: ${loan.loanId} | Principal: ₹${loan.principal} | Weekly Due:₹${loan.weeklyDue} | Paid Interest:₹${loan.totalPaidInterest}</div>`; });
+            loansHtml += `<button id="closeModalBtn">Close</button></div>`;
+            modalDiv.innerHTML = loansHtml;
+            document.getElementById("closeModalBtn")?.addEventListener("click", () => modalDiv.innerHTML = "");
+        }
+    }
+    
+    function addNewCustomer() { 
+        let name = prompt("Customer Full Name:"); 
+        if(!name) return; 
+        let phone = prompt("Phone Number:"); 
+        let id = "C" + Math.floor(Math.random()*10000); 
+        financeData.customers.push({ id, name, phone, address: "NA", loans: [] }); 
+        persistData(); 
+        renderApp(); 
+    }
+    
+    function getCurrentPeriodKey(periodType) { 
+        const now = new Date(); 
+        if(periodType === 'weekly') { 
+            const weekNo = Math.ceil((now - new Date(now.getFullYear(),0,1)) / (7*24*60*60*1000)); 
+            return `W${now.getFullYear()}-${weekNo}`; 
+        } else { 
+            return `${now.getFullYear()}-${now.getMonth()+1}`; 
+        } 
+    }
+    
+    function renderLoanManagement() {
+        let html = `<h4>✨ ${currentView === 'weekly' ? 'Weekly Interest Only Payment' : 'Monthly Interest Payment'} (Principal never reduces)</h4>`;
+        html += `<table><thead><tr><th>Customer</th><th>Loan ID</th><th>Principal</th><th>Due (${currentView})</th><th>Paid Interest</th><th>Pay Interest</th></tr></thead><tbody>`;
+        financeData.customers.forEach(cust => { 
+            cust.loans.forEach(loan => { 
+                if(loan.status === 'active') { 
+                    const due = currentView === 'weekly' ? loan.weeklyDue : loan.monthlyDue; 
+                    html += `<tr>
+                        <td>${cust.name}</td>
+                        <td>${loan.loanId}</td>
+                        <td>₹${loan.principal}</td>
+                        <td>₹${due}</td>
+                        <td>₹${loan.totalPaidInterest || 0}</td>
+                        <td><input type="number" id="payAmt_${loan.loanId}" value="${due}" style="width:100px;"> 
+                        <button class="payInterestBtn" data-custid="${cust.id}" data-loanid="${loan.loanId}" data-period="${currentView}">💸 Pay</button></td>
+                    </tr>`; 
+                } 
+            }); 
+        });
+        html += `</tbody></table>`;
+        setTimeout(() => { 
+            document.querySelectorAll(".payInterestBtn").forEach(btn => { 
+                btn.addEventListener("click", () => { 
+                    const custId = btn.dataset.custid, loanId = btn.dataset.loanid, period = btn.dataset.period; 
+                    const amount = parseFloat(document.getElementById(`payAmt_${loanId}`).value); 
+                    if(amount>0 && addInterestPayment(custId, loanId, amount, period, getCurrentPeriodKey(period))) { 
+                        alert("✅ Interest paid! Principal unchanged"); 
+                        renderApp(); 
+                    } else alert("Invalid amount"); 
+                }); 
+            }); 
+        }, 10);
+        return html;
+    }
+    
+    function renderCollectionReport() {
+        let allCollections = getAllCollections();
+        let viewFiltered = allCollections;
+        if(currentView === 'weekly') viewFiltered = allCollections.filter(c => c.weekRef);
+        else viewFiltered = allCollections.filter(c => c.monthRef);
+        
+        const filtered = filterByDateRange(viewFiltered, dateFilterStart, dateFilterEnd);
+        const totalCollected = filtered.reduce((sum, c) => sum + c.amount, 0);
+        
+        let html = `
+            <div class="filter-bar">
+                <span>📅 Date Filter:</span>
+                <input type="date" id="filterStartDate" value="${dateFilterStart}">
+                <span>to</span>
+                <input type="date" id="filterEndDate" value="${dateFilterEnd}">
+                <button id="applyDateFilter">Apply Filter</button>
+                <button id="exportExcelBtn" class="export-btn">📎 Export to Excel</button>
+            </div>
+            <div class="finance-summary">
+                <div class="summary-card">💰 Total ${currentView} Collection: ₹${totalCollected}</div>
+                <div class="summary-card">📄 Records: ${filtered.length}</div>
+            </div>
+            <div style="overflow-x:auto;">
+            <table><thead><tr><th>Customer</th><th>Loan ID</th><th>Date</th><th>Type</th><th>Amount (₹)</th><th>Print Bill</th></tr></thead><tbody>`;
+        if(filtered.length === 0) {
+            html += `<tr><td colspan="6" style="text-align:center;">No collection records found for selected period</td></tr>`;
+        } else {
+            filtered.forEach(rec => {
+                html += `<tr>
+                            <td>${rec.customerName}</td>
+                            <td>${rec.loanId}</td>
+                            <td>${rec.date}</td>
+                            <td>${rec.type}</td>
+                            <td>₹${rec.amount}</td>
+                            <td><button class="printBillBtn" data-name="${rec.customerName}" data-amt="${rec.amount}" data-type="${rec.type}" data-date="${rec.date}">🖨️ Print Bill</button></td>
+                         </tr>`;
+            });
+        }
+        html += `</tbody></table></div>`;
+        
+        setTimeout(() => {
+            document.querySelectorAll(".printBillBtn").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const cust = btn.getAttribute("data-name");
+                    const amt = btn.getAttribute("data-amt");
+                    const typ = btn.getAttribute("data-type");
+                    const dt = btn.getAttribute("data-date");
+                    printBill(cust, amt, typ, dt);
+                });
+            });
+            const applyBtn = document.getElementById("applyDateFilter");
+            if(applyBtn) {
+                applyBtn.addEventListener("click", () => {
+                    dateFilterStart = document.getElementById("filterStartDate").value;
+                    dateFilterEnd = document.getElementById("filterEndDate").value;
+                    renderApp();
+                });
+            }
+            const exportBtn = document.getElementById("exportExcelBtn");
+            if(exportBtn) {
+                exportBtn.addEventListener("click", () => {
+                    let exportData = [...filtered];
+                    if(exportData.length === 0) { alert("No data to export!"); return; }
+                    exportToExcel(exportData, `${currentView.toUpperCase()}_Collection`);
+                });
+            }
+        }, 10);
+        return html;
+    }
+    
+    function printBill(customerName, amount, type, date) {
+        const billWindow = window.open("", "_blank");
+        billWindow.document.write(`
+            <html><head><title>${companyProfile.name} - Bill</title><style>
+            body{font-family:monospace;padding:2rem;} .bill{border:3px solid #8b2c2d; border-radius:20px; padding:1.5rem; max-width:450px; margin:auto;}
+            .logo{text-align:center;} img{max-width:80px; border-radius:50%;}
+            </style></head>
+            <body><div class="bill">
+            <div class="logo">${companyProfile.logo ? `<img src="${companyProfile.logo}">` : `<h2>💰</h2>`}<h2 style="color:#8b2c2d;">${companyProfile.name}</h2></div>
+            <p><strong>${companyProfile.address}</strong><br>📞 ${companyProfile.phone1} / ${companyProfile.phone2}</p><hr>
+            <p><strong>Customer:</strong> ${customerName}</p><p><strong>Payment Type:</strong> ${type}</p>
+            <p><strong>Amount:</strong> ₹${amount}</p><p><strong>Date:</strong> ${date}</p>
+            <p><strong>${currentView.toUpperCase()} Receipt</strong><br><em>Principal unchanged - Interest settled</em></p><hr>
+            <p>Thank you! - Sreejaa Finance</p></div>
+            <script>window.print();setTimeout(()=>window.close(),1200);<\/script></body></html>
+        `);
+        billWindow.document.close();
+    }
+    
+    function attachDashboardEvents() {
+        document.getElementById("logoutBtn")?.addEventListener("click", () => { currentUser = null; renderApp(); });
+        document.querySelectorAll(".view-tab").forEach(tab => {
+            tab.addEventListener("click", (e) => {
+                const view = tab.getAttribute("data-view");
+                if(view === 'weekly' || view === 'monthly') { currentView = view; renderApp(); }
+            });
+        });
+        document.querySelectorAll(".option-card").forEach(card => {
+            card.addEventListener("click", (e) => {
+                const opt = card.getAttribute("data-opt");
+                if(opt) { activeOption = opt; renderApp(); }
+            });
+        });
+        const editBtn = document.getElementById("editCompanyBtn");
+        if(editBtn) editBtn.addEventListener("click", () => openProfileEditor());
+    }
+    
+    renderApp();
+</script>
+</body>
+</html>
